@@ -1,0 +1,166 @@
+print("\n\n")
+import json
+
+autos = {
+    "autostore": {
+        "auto": [
+            {
+                "marca":"Chevrolet",
+                "linea": "Beat",
+                "modelo": "2020",
+                "precio": "10000",
+                "equipamiento": [
+                    "Aire Acondicionado",
+                    "Vidrios Eléctricos 4 Puertas",
+                    "Rines de Lujo",
+                    "Luces Exploradoras"
+                ]
+            },
+            {
+                "marca":"Mazda",
+                "linea": "6",
+                "modelo": "2023",
+                "precio": "12000",
+                "equipamiento": "Full Equipo"
+            },
+            {
+                "marca":"Renault",
+                "linea": "Duster",
+                "modelo": "2022",
+                "precio": "9000",
+                "equipamiento": "Sin Equipamento Adicional"
+                
+            },
+            {
+                "marca":"Chevrolet",
+                "linea": "Onix",
+                "modelo": "2023",
+                "precio": "12000",
+                "equipamiento": [
+                    "Aire Acondicionado",
+                    "Vidrios Eléctricos 4 Puertas",
+                    "Rines de Lujo",
+                    "Luces Exploradoras",
+			        "Sensores de Reversa",
+                    "Cámara 360°"
+                ]
+            }
+        ]
+    }
+}
+
+
+def actualizar():
+    with open("AutoShopping.json", "w") as archivo:
+        json.load(archivo)
+
+def crearId(diccionario):
+    id = len(diccionario)
+    return id + 1
+
+def mostrar_autos(autos):
+    print("\nLos automoviles disponibles son: ")
+    for datos in autos["autostore"]["auto"]:
+        print(f"Marca: {datos['marca']}")
+        print(f"Línea: {datos['linea']}")
+        print(f"Modelo: {datos['modelo']}")
+        print(f"Precio: {datos['precio']}")
+        print("Equipamiento: ")
+        for item in datos['equipamiento']:
+            print(f"- {item}")
+        print("----------------------------------------------")
+    
+def crear_auto(auto):
+    marca = input("MARCA: ")
+    linea = input("LINEA: ")
+    modelo = input("MODELO: ")
+    precio = input("PRECIO: ")
+    equipamiento = []
+    while True:
+        item = input("Ingrese un ítem de equipamiento (o presione Enter para salir): ")
+        if item == "":
+            break
+        equipamiento.append(item)
+    for auto in auto["autostore"]["auto"]:
+        auto = {
+            "marca": marca,
+            "linea": linea,
+            "modelo": modelo,
+            "precio": precio,
+            "equipamiento": equipamiento
+        }
+    autos["autostore"]["auto"].append(auto)
+    print("El auto ha sido agregado exitosamente.\n\n")
+    for datos in autos["autostore"]["auto"]:
+        print(datos)
+
+def mostrarAutos(auto):
+    marca = input("Ingrese la marca del auto que desea buscar: ")
+    autos_encontrados = False
+    for auto in auto["autostore"]["auto"]:
+        if auto["marca"] == marca:
+            print(f"Línea: {auto['linea']}")
+            print(f"Modelo: {auto['modelo']}")
+            print(f"Precio: {auto['precio']}")
+            print("Equipamiento:")
+            for item in auto['equipamiento']:
+                print(f"- {item}")
+            print()
+            autos_encontrados = True
+    if not autos_encontrados:
+        print(f"No se encontraron autos de la marca {marca}.")
+        
+def actualizar_auto(datos):
+    mostrar_autos(datos,marca, linea, modelo)
+    indice = int(input("Ingrese el índice del auto que desea actualizar: "))
+    auto = datos["autostore"]["auto"][indice]
+    print(f"Actualizando datos del auto {auto['marca']} {auto['linea']} {auto['modelo']}:")
+    marca = input(f"Ingrese la nueva marca ({auto['marca']}): ") or auto['marca']
+    linea = input(f"Ingrese la nueva línea ({auto['linea']}): ") or auto['linea']
+    modelo = input(f"Ingrese el nuevo modelo ({auto['modelo']}): ") or auto['modelo']
+
+def crearId(diccionario):
+    id = len(diccionario)
+    return id + 1
+
+def agregarAuto(autos, marca, linea, modelo, precio, equipamiento):
+    id = crearId(autos)
+    autos[id] = {
+        "marca": marca,
+        "linea": linea,
+        "modelo": modelo,
+        "precio": precio,
+        "equipamiento": equipamiento
+    }
+    return autos
+    
+def menu():
+    print("\n********************** MENU **********************")
+    print("0.Salir\n1.Mostrar automoviles\n2.Crear nuevo auto\n3.Mostrar datos de auto\n4.Actualizar datos de auto\n5.Eliminar auto\n")
+
+with open("AutoShopping.json", "w") as archivo:
+    json.dump(autos,archivo)
+archivo.close()
+menu()
+opcMenu = int(input("Ingrese la opcion deseada:"))
+while opcMenu != 0:
+    if opcMenu == 1:
+        mostrar_autos(autos)
+        break
+    elif opcMenu == 2:
+        crear_auto(autos)
+        with open("AutoShopping.json", "w") as archivo:
+            json.dump(autos,archivo)
+        archivo.close()
+        break
+    elif opcMenu == 3:
+        mostrarAutos(autos)
+        break
+    elif opcMenu == 4:
+        break
+    elif opcMenu == 5:
+        mostrar_autos(autos)
+        break
+    else:
+        print("Ingrese un numero valido")
+print("\n\n")
